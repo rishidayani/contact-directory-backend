@@ -2,7 +2,6 @@ const mongoose = require(`mongoose`);
 const validator = require(`validator`);
 const bcrypt = require(`bcryptjs`);
 const jwt = require(`jsonwebtoken`);
-const Contact = require("./contact.js");
 
 const userSchema = new mongoose.Schema({
   userName: {
@@ -97,6 +96,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
   return user;
 };
+
 
 //Hashing Password before saving
 userSchema.pre("save", async function (next) {
