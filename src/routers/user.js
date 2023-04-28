@@ -160,7 +160,6 @@ router.delete("/users/me", auth, async (req, res) => {
 // })
 
 //Google auth rout3
-
 const client = new OAuth2Client(CLIENT_ID);
 router.post("/gAuthenticate", async (req, res) => {
   // console.log(req.body);

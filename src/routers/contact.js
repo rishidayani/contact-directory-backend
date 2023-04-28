@@ -1,8 +1,8 @@
 const auth = require("../middleware/auth.js");
-const Contact = require(`../models/contact.js`);
-const express = require(`express`);
 const { google } = require("googleapis");
 const { OAuth2Client } = require("google-auth-library");
+const express = require(`express`);
+const Contact = require(`../models/contact.js`);
 const {
   CLIENT_ID,
   CLIENT_SECRET,
