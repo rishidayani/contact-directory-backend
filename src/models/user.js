@@ -3,7 +3,6 @@ const jwt = require(`jsonwebtoken`);
 const mongoose = require(`mongoose`);
 const validator = require(`validator`);
 
-
 const userSchema = new mongoose.Schema({
   userName: {
     type: String,
@@ -34,15 +33,15 @@ const userSchema = new mongoose.Schema({
     },
   },
   image: {
-    type:String
+    type: String,
   },
   age: {
     type: Number,
-    default: 0
+    default: 0,
   },
   gender: {
     type: String,
-    default : 'Male'
+    default: "Male",
   },
   tokens: [
     {
@@ -54,30 +53,30 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-userSchema.virtual('contacts', {
-  ref: 'Contact',
-  localField: '_id',
-  foreignField: 'owner'
-})
+userSchema.virtual("contacts", {
+  ref: "Contact",
+  localField: "_id",
+  foreignField: "owner",
+});
 
 userSchema.methods.toJSON = function () {
-    const user = this
-    const userObject  = user.toObject()
+  const user = this;
+  const userObject = user.toObject();
 
-    delete userObject.password
-    delete userObject.tokens
+  delete userObject.password;
+  delete userObject.tokens;
 
-    return userObject
-}
+  return userObject;
+};
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, "argusoft", {
-    expiresIn: '1h'
+    expiresIn: "1h",
   });
 
   user.tokens = user.tokens.concat({ token });
-    await user.save()
+  await user.save();
 
   return token;
 };
@@ -97,7 +96,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
   return user;
 };
-
 
 //Hashing Password before saving
 userSchema.pre("save", async function (next) {

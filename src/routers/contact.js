@@ -43,8 +43,20 @@ router.post("/contacts/search", auth, async (req, res) => {
     name: { $regex: regex },
     owner: req.user._id,
   }).exec();
-  search = search.slice(0, 5);
   res.send(search);
+});
+
+router.post("/contacts/filter", auth, async (req, res) => {
+  const date = req.body.date;
+  try {
+    const contact = await Contact.find({
+      createdAt: { $gt: date },
+      owner: req.user._id,
+    });
+    res.send(contact);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
 router.get("/contacts/:contactId", auth, async (req, res) => {
@@ -64,6 +76,13 @@ router.get("/contacts/:contactId", auth, async (req, res) => {
 
 router.post("/contacts/add", auth, async (req, res) => {
   // const contact = new Contact(req.body);
+  const num = req.body.mobile;
+  const con = await Contact.findOne({ mobile: num, owner: req.user._id });
+  if (con) {
+    return res
+      .status(400)
+      .send("Contact with this mobile number already exists.");
+  }
   const contact = new Contact({
     ...req.body,
     owner: req.user._id,
@@ -84,7 +103,15 @@ router.post("/contacts/add", auth, async (req, res) => {
 router.patch("/contacts/edit/:contactId", auth, async (req, res) => {
   const id = req.params.contactId;
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["name", "mobile", "createdAt", "updatedAt", "photo"];
+  const allowedUpdates = [
+    "name",
+    "mobile",
+    "createdAt",
+    "updatedAt",
+    "photo",
+    "firstName",
+    "lastName",
+  ];
   const isValid = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValid) {
@@ -118,8 +145,6 @@ router.delete(`/contacts/:contactId`, auth, async (req, res) => {
     res.status(500).send(`Error: ${e}`);
   }
 });
-
-
 
 // Create a new OAuth2Client instance
 const oauth2Client = new OAuth2Client({
@@ -162,7 +187,7 @@ router.get("/api/people", async (req, res) => {
 
     const { data } = await people.people.connections.list({
       resourceName: "people/me",
-      personFields: "names,emailAddresses",
+      personFields: "names,emailAddresses,phoneNumbers,photos",
       sortOrder: "LAST_MODIFIED_DESCENDING",
     });
 
@@ -183,7 +208,7 @@ router.get("/api/people", async (req, res) => {
 
       const { data } = await people.people.connections.list({
         resourceName: "people/me",
-        personFields: "names,emailAddresses,phoneNumbers",
+        personFields: "names,emailAddresses,phoneNumbers,photos",
         sortOrder: "LAST_MODIFIED_DESCENDING",
       });
 

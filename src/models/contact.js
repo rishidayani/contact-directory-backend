@@ -7,6 +7,16 @@ const contactSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    firstName: {
+      type: String,
+      // required: true,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      // required: true,
+      trim: true,
+    },
     mobile: {
       type: String,
       required: true,
@@ -14,19 +24,19 @@ const contactSchema = new mongoose.Schema(
       trim: true,
     },
     photo: {
-      type: String
+      type: String,
     },
-    created_at: {
+    createdAt: {
       type: Date,
     },
-    updated_at: {
+    updatedAt: {
       type: Date,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User'
-    }
+      ref: "User",
+    },
   },
   {
     timestamps: true,
