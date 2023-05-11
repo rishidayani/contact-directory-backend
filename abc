@@ -1,1 +1,0 @@
-mongod --dbpath="/home/rushi/Documents/Mongodb-data" --logpath="/home/rushi/Documents/Mongodb-log/log.log" --port=5000

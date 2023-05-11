@@ -209,4 +209,14 @@ router.post("/gAuthenticate", async (req, res) => {
     .catch(console.error);
 });
 
+router.get("/users/userList", auth, async (req, res) => {
+  try {
+    const AllUsers = await User.find();
+    const users = AllUsers.filter((user) => user.email !== req.user.email);
+    res.status(200).send(users);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
 module.exports = router;
